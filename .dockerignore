@@ -1,0 +1,8 @@
+target/
+downloads/
+cookies/
+*.log
+.git/
+.gitignore
+README.md
+.env
