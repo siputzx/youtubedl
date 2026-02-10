@@ -57,16 +57,14 @@ pub fn get_pow_difficulty() -> usize {
 
 pub fn get_valid_apikeys() -> Vec<String> {
     env::var("VALID_APIKEYS")
-        .map(|keys| keys.split(',').map(|s| s.trim().to_string()).collect())
-        .unwrap_or_else(|_| vec![
-            "nbteam".to_string(),
-            "siputzxteam".to_string(),
-            "cepetan".to_string(),
-        ])
+        .ok()
+        .filter(|s| !s.trim().is_empty())
+        .map(|keys| keys.split(',').map(|s| s.trim().to_string()).filter(|s| !s.is_empty()).collect())
+        .unwrap_or_else(Vec::new)
 }
 
 pub fn get_port() -> String {
-    env::var("PORT").unwrap_or_else(|_| "3004".to_string())
+    env::var("PORT").unwrap_or_else(|_| "3000".to_string())
 }
 
 pub fn get_max_concurrent() -> Option<usize> {
