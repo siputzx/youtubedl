@@ -44,41 +44,57 @@ Modular, high-performance YouTube downloader dengan Proof of Work authentication
 - **RESTful API**: Simple HTTP endpoints
 - **Well-documented**: Clear code structure
 
-## 🔐 Authentication Flow
+# 🔐 Authentication Flow
 
+## Diagram Alur Autentikasi
+
+```mermaid
+flowchart TD
+    Start([Request Download]) --> CheckAPI{Ada API Key?}
+    
+    CheckAPI -->|YES| ValidAPI{Valid?}
+    CheckAPI -->|NO| PoWRequired[PoW Required]
+    
+    ValidAPI -->|YES| SkipPoW[Skip PoW]
+    ValidAPI -->|NO| PoWRequired
+    
+    PoWRequired --> SolvePoW[Solve PoW]
+    SolvePoW --> Verify[Verify]
+    
+    Verify --> Download
+    SkipPoW --> Download
+    
+    Download([Download])
+    
+    style Start fill:#4A90E2,stroke:#2E5C8A,stroke-width:3px,color:#fff
+    style Download fill:#27AE60,stroke:#1E8449,stroke-width:3px,color:#fff
+    style CheckAPI fill:#F39C12,stroke:#D68910,stroke-width:3px,color:#000
+    style ValidAPI fill:#F39C12,stroke:#D68910,stroke-width:3px,color:#000
+    style PoWRequired fill:#E74C3C,stroke:#C0392B,stroke-width:3px,color:#fff
+    style SolvePoW fill:#F1C40F,stroke:#D4AC0D,stroke-width:3px,color:#000
+    style Verify fill:#3498DB,stroke:#2874A6,stroke-width:3px,color:#fff
+    style SkipPoW fill:#1ABC9C,stroke:#138D75,stroke-width:3px,color:#fff
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    Request Download                          │
-└──────────────────────┬──────────────────────────────────────┘
-                       │
-                       ▼
-              ┌────────────────┐
-              │  Ada API Key?  │
-              └────┬──────┬────┘
-                   │      │
-              YES  │      │  NO
-                   ▼      ▼
-          ┌──────────┐  ┌────────────────┐
-          │  Valid?  │  │ PoW Required   │
-          └──┬────┬──┘  └───────┬────────┘
-             │    │             │
-        YES  │    │  NO         │
-             ▼    ▼             ▼
-        ┌────────────┐    ┌──────────┐
-        │ Skip PoW   │    │ Solve PoW│
-        └──────┬─────┘    └────┬─────┘
-               │               │
-               │               ▼
-               │         ┌──────────┐
-               │         │ Verify   │
-               │         └────┬─────┘
-               │              │
-               └──────┬───────┘
-                      ▼
-              ┌───────────────┐
-              │   Download    │
-              └───────────────┘
-```
+
+## Penjelasan Alur
+
+1. **Request Download**: Pengguna meminta untuk mengunduh file
+2. **Cek API Key**: Sistem memeriksa apakah ada API key
+   - **Jika ADA**: Lanjut ke validasi API key
+   - **Jika TIDAK ADA**: Wajib menyelesaikan Proof of Work (PoW)
+3. **Validasi API Key**:
+   - **Jika VALID**: Lewati proses PoW
+   - **Jika TIDAK VALID**: Wajib menyelesaikan PoW
+4. **Proof of Work**: Proses komputasi untuk membuktikan legitimasi
+5. **Verify**: Verifikasi hasil PoW
+6. **Download**: Akses download diberikan
+
+## Keuntungan Sistem Ini
+
+- ✅ Mencegah spam dan abuse
+- ✅ Memberikan prioritas untuk pengguna dengan API key valid
+- ✅ Mengurangi beban server dengan PoW untuk pengguna anonim
+- ✅ Sistem keamanan berlapis
 
 ## 📋 Authentication Modes
 
